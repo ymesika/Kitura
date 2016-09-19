@@ -23,8 +23,8 @@ Package-Builder/build/Makefile:
 
 generateRouterVerbs: Sources/Kitura/RouterHTTPVerbs_generated.swift Tests/KituraTests/TestRouterHTTPVerbs_generated.swift
 
-Sources/Kitura/RouterHTTPVerbs_generated.swift: Configuration/RouterHTTPVerbs.txt
+Sources/Kitura/RouterHTTPVerbs_generated.swift: Configuration/RouterHTTPVerbs.txt Scripts/generate_router_verbs.sh
 	@bash Scripts/generate_router_verbs.sh $< $@
 
-Tests/KituraTests/TestRouterHTTPVerbs_generated.swift: Configuration/RouterHTTPVerbs.txt
+Tests/KituraTests/TestRouterHTTPVerbs_generated.swift: Configuration/RouterHTTPVerbs.txt Scripts/generate_router_verb_tests.sh
 	@bash Scripts/generate_router_verb_tests.sh $< $@
