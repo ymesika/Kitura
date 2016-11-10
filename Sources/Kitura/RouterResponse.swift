@@ -208,6 +208,38 @@ public class RouterResponse {
         return self
     }
 
+    /// Send JSON.
+    ///
+    /// - Parameter json: the Dictionary to send in JSON format.
+    /// - Returns: this RouterResponse.
+    @discardableResult
+    public func send(json: [String: Any]) -> RouterResponse {
+        do {
+            let jsonData = try LclJSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+            headers.setType("json")
+            send(data: jsonData)
+        }
+        catch { } // Do nothing if the Dictionary to Data fails
+            
+        return self
+    }
+
+    /// Send JSON.
+    ///
+    /// - Parameter json: the Array to send in JSON format.
+    /// - Returns: this RouterResponse.
+    @discardableResult
+    public func send(json: [Any]) -> RouterResponse {
+        do {
+            let jsonData = try LclJSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
+            headers.setType("json")
+            send(data: jsonData)
+        }
+        catch { } // Do nothing if the Array to Data fails
+            
+        return self
+    }
+
     /// Send JSON with JSONP callback.
     ///
     /// - Parameter json: the JSON object to send.
