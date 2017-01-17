@@ -21,6 +21,7 @@ import Foundation
 enum Error: Swift.Error {
     case failedToParseRequestBody(body: String)
     case failedToRedirectRequest(path: String, chainedError: Swift.Error)
+    case failedToSendFile(fileName: String)
 }
 
 extension Error: CustomStringConvertible {
@@ -31,6 +32,8 @@ extension Error: CustomStringConvertible {
         case .failedToRedirectRequest(let path, let chainedError):
             return "Failed to redirect a request for directory at \(path)" +
                      " caught error = \(chainedError)"
+        case .failedToSendFile(let fileName):
+            return "Failed to send the file \(fileName)"
         }
     }
 }

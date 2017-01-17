@@ -196,6 +196,8 @@ public class RouterResponse {
         state.invokedSend = true
         return self
     }
+    
+    private let fileReadSize = 50 * 1024
 
     /// Send a file.
     ///
@@ -207,15 +209,25 @@ public class RouterResponse {
     ///       If the fileName is relative, it is relative to the current directory.
     @discardableResult
     public func send(fileName: String) throws -> RouterResponse {
-        let data = try Data(contentsOf: URL(fileURLWithPath: fileName))
-
-        let contentType = ContentType.sharedInstance.getContentType(forFileName: fileName)
-        if  let contentType = contentType {
-            headers["Content-Type"] = contentType
+        
+        if let file = FileHandle(forReadingAtPath: fileName) {
+            let contentType = ContentType.sharedInstance.getContentType(forFileName: fileName)
+            if  let contentType = contentType {
+                headers["Content-Type"] = contentType
+            }
+            
+            var fileData: Data
+            repeat {
+                fileData  = file.readData(ofLength: fileReadSize)
+                if fileData.count != 0 {
+                    send(data: fileData)
+                }
+            } while fileData.count != 0
         }
-
-        send(data: data)
-
+        else {
+            throw Error.failedToSendFile(fileName: fileName)
+        }
+        
         return self
     }
 
